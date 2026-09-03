@@ -4,11 +4,11 @@ import SectionHeading from './SectionHeading'
 
 export default function Hero() {
   return (
-    <section className="relative w-full pb-10 pt-20 sm:pt-10">
+    <section className="relative w-full pb-10 pt-20 sm:pt-2">
       <div className="mx-auto max-w-sm px-6 text-center sm:px-8">
         <SectionHeading className="!text-sm sm:!text-base">AI BUBBLE RISK</SectionHeading>
 
-        <div className="relative mt-16 sm:mt-[4.5rem]">
+        <div className="relative mt-20 sm:mt-24">
           {/* mascot peeking over the top edge of the card */}
           <div className="absolute bottom-full left-1/2 z-10 w-24 -translate-x-1/2 translate-y-[8%] sm:w-28">
             <MascotHandsPeek />
@@ -46,8 +46,8 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* prediction notification, pinned near the header */}
-      <div className="fixed right-0 top-20 z-10 w-[calc(100vw-1.5rem)] max-w-xs sm:top-24">
+      {/* prediction notification, sits near the top and scrolls away with the page */}
+      <div className="absolute right-0 top-0 z-10 w-[calc(100vw-1.5rem)] max-w-xs">
         <PredictionCard />
       </div>
     </section>

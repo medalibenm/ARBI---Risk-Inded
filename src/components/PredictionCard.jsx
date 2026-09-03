@@ -1,6 +1,6 @@
 export default function PredictionCard() {
   return (
-    <div className="flex items-center gap-3 rounded-2xl border border-black/5 bg-white px-4 py-3 shadow-card">
+    <div className="animate-nudge-x flex items-center gap-3 rounded-2xl border border-black/5 bg-white px-4 py-3 shadow-card">
       <p className="text-xs font-bold uppercase leading-snug text-ink">
         Can you predict when the AI bubble will pop?
       </p>
