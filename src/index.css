@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  background-color: #FAFAFA;
+}
+
+body {
+  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, monospace;
+  -webkit-font-smoothing: antialiased;
+}
+
+.pixel-crisp {
+  image-rendering: pixelated;
+  shape-rendering: crispEdges;
+}
+
+.card-border {
+  border: 1.5px solid rgba(26, 26, 26, 0.85);
+}
+
+.card-border-soft {
+  border: 1px solid rgba(26, 26, 26, 0.14);
+}
+
+@keyframes bounce-x {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-14px); }
+}
+
+.animate-bounce-x {
+  animation: bounce-x 2.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-bounce-x {
+    animation: none;
+  }
+}
