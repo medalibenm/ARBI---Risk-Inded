@@ -1,11 +1,3 @@
-const TONE_CLASSES = {
-  pink: { bg: 'bg-signal-pink', fg: 'text-signal-pinkIcon' },
-  peach: { bg: 'bg-signal-peach', fg: 'text-signal-peachIcon' },
-  blue: { bg: 'bg-signal-blue', fg: 'text-signal-blueIcon' },
-  green: { bg: 'bg-signal-green', fg: 'text-signal-greenIcon' },
-  purple: { bg: 'bg-signal-purple', fg: 'text-signal-purpleIcon' },
-}
-
 function Glyph({ icon }) {
   switch (icon) {
     case 'bars':
@@ -57,10 +49,9 @@ function Glyph({ icon }) {
   }
 }
 
-export default function SignalIcon({ tone, icon }) {
-  const classes = TONE_CLASSES[tone]
+export default function SignalIcon({ icon }) {
   return (
-    <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${classes.bg} ${classes.fg}`}>
+    <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-muted text-destructive">
       <Glyph icon={icon} />
     </div>
   )

@@ -47,7 +47,7 @@ export default function AbriChart() {
   return (
     <div className="w-full">
       <div className="flex gap-3">
-        <div className="flex flex-col justify-between py-0 text-xs text-muted" style={{ height: HEIGHT }}>
+        <div className="flex flex-col justify-between py-0 text-xs text-muted-foreground" style={{ height: HEIGHT }}>
           {Y_TICKS.slice()
             .reverse()
             .map((t) => (
@@ -71,20 +71,20 @@ export default function AbriChart() {
                 x2={WIDTH}
                 y1={yFor(t)}
                 y2={yFor(t)}
-                stroke="#DAD5C9"
+                stroke="var(--border)"
                 strokeWidth="1"
                 strokeDasharray="3 4"
               />
             ))}
 
-            <path d={areaPath} fill="#D5372E" opacity="0.12" />
-            <path d={linePath} fill="none" stroke="#D5372E" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
+            <path d={areaPath} fill="var(--destructive)" opacity="0.12" />
+            <path d={linePath} fill="none" stroke="var(--destructive)" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
 
             {points.slice(0, -1).map((p, i) => (
-              <rect key={i} x={p.x - 1.5} y={p.y - 1.5} width="3" height="3" fill="#D5372E" />
+              <rect key={i} x={p.x - 1.5} y={p.y - 1.5} width="3" height="3" fill="var(--destructive)" />
             ))}
 
-            <circle cx={last.x} cy={last.y} r="6" fill="white" stroke="#D5372E" strokeWidth="2.5" />
+            <circle cx={last.x} cy={last.y} r="6" fill="var(--background)" stroke="var(--destructive)" strokeWidth="2.5" />
 
             {hover !== null && (
               <line
@@ -92,19 +92,19 @@ export default function AbriChart() {
                 x2={points[hover].x}
                 y1={0}
                 y2={HEIGHT}
-                stroke="#181614"
+                stroke="var(--foreground)"
                 strokeOpacity="0.15"
                 strokeWidth="1"
               />
             )}
             {hover !== null && (
-              <circle cx={points[hover].x} cy={points[hover].y} r="4" fill="#181614" />
+              <circle cx={points[hover].x} cy={points[hover].y} r="4" fill="var(--foreground)" />
             )}
           </svg>
 
           {hover !== null && (
             <div
-              className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full rounded-md bg-ink px-2.5 py-1.5 text-xs text-white shadow-lg"
+              className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full rounded-lg bg-foreground px-2.5 py-1.5 text-xs text-background"
               style={{
                 left: `${(points[hover].x / WIDTH) * 100}%`,
                 top: `${(points[hover].y / HEIGHT) * 100}%`,
@@ -112,13 +112,13 @@ export default function AbriChart() {
               }}
             >
               <div className="font-semibold">{points[hover].date}</div>
-              <div className="text-white/70">{points[hover].value} / 100</div>
+              <div className="text-background/70">{points[hover].value} / 100</div>
             </div>
           )}
         </div>
       </div>
 
-      <div className="mt-2 flex justify-between pl-8 text-xs font-semibold uppercase tracking-wide text-muted">
+      <div className="mt-2 flex justify-between pl-8 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
         {xAxisLabels.map((label) => (
           <span key={label}>{label}</span>
         ))}

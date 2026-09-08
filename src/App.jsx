@@ -6,7 +6,7 @@ import Footer from './components/Footer'
 
 export default function App() {
   return (
-    <div className="min-h-screen overflow-x-hidden bg-cream text-ink">
+    <div className="min-h-screen overflow-x-hidden bg-background text-foreground">
       <Header />
       <Hero />
       <SignalsSection />

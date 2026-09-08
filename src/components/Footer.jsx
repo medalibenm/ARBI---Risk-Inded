@@ -27,29 +27,29 @@ function MailIcon() {
 
 export default function Footer() {
   return (
-    <footer className="border-t border-divider">
+    <footer className="border-t border-border">
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 px-6 py-8 sm:flex-row sm:justify-between sm:px-8">
         <div className="flex items-baseline gap-3">
-          <span className="text-xl font-extrabold tracking-tight text-ink">ABRI</span>
-          <span className="text-xs font-semibold tracking-wide text-muted">AI BUBBLE RISK INDEX</span>
+          <span className="text-xl font-extrabold tracking-tight text-foreground">ABRI</span>
+          <span className="text-xs font-semibold tracking-wide text-muted-foreground">AI BUBBLE RISK INDEX</span>
         </div>
 
         <nav className="flex flex-wrap items-center justify-center gap-5">
           {LINKS.map((link) => (
-            <a key={link} href="#" className="text-xs font-bold tracking-wide text-ink hover:text-primary">
+            <a key={link} href="#" className="text-xs font-bold tracking-wide text-foreground hover:text-destructive">
               {link}
             </a>
           ))}
         </nav>
 
-        <div className="flex items-center gap-4 text-ink">
-          <a href="#" aria-label="Twitter" className="hover:text-primary">
+        <div className="flex items-center gap-4 text-foreground">
+          <a href="#" aria-label="Twitter" className="hover:text-destructive">
             <TwitterIcon />
           </a>
-          <a href="#" aria-label="LinkedIn" className="hover:text-primary">
+          <a href="#" aria-label="LinkedIn" className="hover:text-destructive">
             <LinkedInIcon />
           </a>
-          <a href="#" aria-label="Email" className="hover:text-primary">
+          <a href="#" aria-label="Email" className="hover:text-destructive">
             <MailIcon />
           </a>
         </div>
