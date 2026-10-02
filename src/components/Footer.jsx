@@ -1,4 +1,10 @@
-const LINKS = ['INDEX', 'NEWS', 'PREDICT', 'METHODOLOGY', 'NEWSLETTER']
+import Link from 'next/link'
+
+const LINKS = [
+  { label: 'INDEX', href: '/' },
+  { label: 'NEWS', href: '/news' },
+  { label: 'METHODOLOGY', href: '/methodology' },
+]
 
 function TwitterIcon() {
   return (
@@ -36,9 +42,9 @@ export default function Footer() {
 
         <nav className="flex flex-wrap items-center justify-center gap-5">
           {LINKS.map((link) => (
-            <a key={link} href="#" className="text-xs font-bold tracking-wide text-foreground hover:text-destructive">
-              {link}
-            </a>
+            <Link key={link.label} href={link.href} className="text-xs font-bold tracking-wide text-foreground hover:text-destructive">
+              {link.label}
+            </Link>
           ))}
         </nav>
 

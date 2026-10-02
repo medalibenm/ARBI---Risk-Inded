@@ -238,7 +238,9 @@ routing exists.
   - Decay curve interpolation shape and event-persistence classification
     (§4)
   - `sensitivity` constant(s) and day-1 bootstrap value (§5)
-  - Missing/sparse-data-day and conflicting-signal handling (§8)
+  - Missing/sparse-data-day handling (§8) — conflicting-signal handling is
+    now resolved (§5's tier/confidence-weighted netting), only its
+    dispersion-flag threshold constant remains open
   - Status band thresholds (§6 — also affects Phase 4's schema)
 
 This phase is the one place in the whole project where building ahead of
@@ -324,7 +326,7 @@ Every ⚠️ above, in one place, so nothing gets missed:
 | Per-factor normalization rubric | `...METHODOLOGY.md` §5/§8 | 7 |
 | Decay curve interpolation + event persistence | `...METHODOLOGY.md` §4/§8 | 7 |
 | Sensitivity constants, day-1 bootstrap | `...METHODOLOGY.md` §5/§8 | 7 |
-| Missing-data / conflicting-signal handling | `...METHODOLOGY.md` §8 | 7 |
+| Missing-data handling; dispersion-flag threshold (conflicting signals otherwise resolved) | `...METHODOLOGY.md` §5/§8 | 7 |
 | Status band thresholds | `...METHODOLOGY.md` §6 | 4, 7 |
 | Exact RSS feed URLs | `...BLUEPRINT.md` §3 | 0, 5 |
 | Source weighting formula | `...BLUEPRINT.md` §28 | 5 |
@@ -343,3 +345,72 @@ Every ⚠️ above, in one place, so nothing gets missed:
 
 None of these are blockers to starting Phase 0/1 — they're checkpoints
 that need an answer by the time their listed phase begins, not before.
+
+
+
+
+
+
+for now let's start building the phases that include the MVP (index feature and showing external news)
+replace luna model with jev by typesafe (PROBABILITY OF THIS ARTICLE BEING RELEVANT AND All)
+jev : https://openrouter.ai/typesafe/jev-1.13#providers
+open router api key :(stored in .env.local as OPENROUTER_API_KEY — not kept in this file)
+guess all Open-decision index except : 
+1- exact rss feeds, here they are : 
+techcrunch rss : https://techcrunch.com/feed/?utm_source=chatgpt.com
+ars technica : https://arstechnica.com/feed/?utm_source=chatgpt.com
+wired ai : https://www.wired.com/feed/tag/ai/latest/rss?utm_source=chatgpt.com
+wired business : https://www.wired.com/feed/category/business/latest/rss?utm_source=chatgpt.com
+venture beat : https://venturebeat.com/feed?utm_source=chatgpt.com
+openai rss : https://openai.com/news/rss.xml?utm_source=chatgpt.com
+google deepmind : https://deepmind.google/blog/rss.xml?utm_source=chatgpt.com
+google ai : https://blog.google/innovation-and-ai/technology/ai/rss/?utm_source=chatgpt.com
+nvidia press: https://nvidianews.nvidia.com/rss?utm_source=chatgpt.com
+nvidia blog : https://www.nvidia.com/en-us/about-nvidia/rss/?utm_source=chatgpt.com
+mit news ai : https://news.mit.edu/rss/topic/artificial-intelligence2?utm_source=chatgpt.com
+mit news : https://news.mit.edu/rss/topic/computers
+microsoft research : https://www.microsoft.com/en-us/research/feed/?utm_source=chatgpt.com
+mistral : https://mistral.ai/news/rss?utm_source=chatgpt.com
+aws ml : https://aws.amazon.com/fr/blogs/machine-learning/feed/?utm_source=chatgpt.com
+2- retrieval  time zone : usa
+3- fall back model : deepseek v4.1 flash 
+and change main model from sol to gpt o4-mini
+open router key : open router api key :(stored in .env.local as OPENROUTER_API_KEY — not kept in this file)
+hosting provider : vercel
+
+---
+
+## Decisions resolved — 2026-10-02 (MVP build: index + news)
+
+Supersedes the matching rows of the open-decision index above. Items marked
+*guess* were chosen by default during the build and are plain constants in
+`src/lib/config.ts` — change them there. The other three spec docs still say
+Luna/Sol/OpenAI; this section is the current truth.
+
+| Item | Decision | Source |
+|---|---|---|
+| AI provider | OpenRouter (`OPENROUTER_API_KEY`, in `.env.local` / Vercel env) | given |
+| Extraction model (was Luna) | `typesafe/jev-1.13` via OpenRouter's Decisions endpoint. Jev is a decision model: it returns the relevance probability, factor, direction, magnitude and event type, but writes no text — no summary or entities | given |
+| Interpretation model (was Sol) | `openai/o4-mini`, one call per day | given |
+| Fallback model | `deepseek/deepseek-v4.1-flash`, for both steps | given |
+| RSS feeds | The 15 given. Three URLs were not feeds and were replaced: NVIDIA press → `nvidianews.nvidia.com/releases.xml`, NVIDIA blog → `blogs.nvidia.com/feed/`, VentureBeat → its FeedBurner feed (the direct URL returns 429). AWS uses the English feed, not `/fr/` | given + verified |
+| Retrieval/score timezone | `America/New_York`; the score day is the ET calendar date | given |
+| Hosting / scheduler / monitoring | Vercel, Vercel Cron (`vercel.json`), Vercel logs + `pipeline_runs` table | given / guess |
+| Schedule | Polls 01:00, 07:00, 19:00 UTC; daily poll + score 13:00 UTC (9am EDT, 8am EST) | guess |
+| Database provider | Neon Postgres via `DATABASE_URL`; embedded PGlite in `.data/` when unset (local) | guess |
+| Framework migration | Next.js (App Router) now | guess |
+| Source weighting | Tier 1→1.0, 2→0.85, 3→0.7, 4→0.5, 5→0.3 | guess |
+| Relevance filter | Rules keep any AI-related article; Jev's probability ≥ 0.3 is the real gate | guess |
+| Event clustering | Same company + event type + factor, or title/summary token overlap ≥ 0.45, within 96h | guess |
+| Evidence package cap | 30 events | guess |
+| Correction penalty | Option 2: heat weights 28/28/22/22, correction weight 0.15 | guess (doc's recommendation) |
+| Factor normalization | Factors move from yesterday's value by signal weight; magnitude 1–10 → base impact 0.1–1.0. Each event is scored once | guess |
+| Decay interpolation | Linear between the anchors, 0 at 21 days; persistence floors as proposed | guess |
+| Sensitivity | 6 points per unit weight; max ±12 per factor per day | guess |
+| Day-1 bootstrap | Funding 70, Valuations 75, Sentiment 70, Infrastructure 80, Correction 35 (ABRI 68) | guess |
+| Sparse-data days | Factors hold flat | guess |
+| Dispersion flag | net/gross < 0.3 with 2+ signals on a factor | guess |
+| Status bands | As proposed in the methodology §6 | guess |
+
+Not built yet: `/predict`, newsletter, Docker, the unused tables
+(`predictions`, `newsletter_subscribers`, `search_queries`, `news_impacts`).

@@ -1,3 +1,11 @@
 node_modules
 dist
+.next
+.vercel
+.data
+.env
+.env.*
+!.env.example
+next-env.d.ts
+*.tsbuildinfo
 .claude/settings.local.json

@@ -9,6 +9,8 @@ function BookIcon() {
   )
 }
 
+import Link from 'next/link'
+
 export default function AboutCard() {
   return (
     <div className="h-full rounded-lg border border-border bg-card p-6">
@@ -20,9 +22,9 @@ export default function AboutCard() {
         ABRI is a daily index that measures the risk of an AI bubble based on funding, valuations,
         sentiment, infrastructure, and market signals.
       </p>
-      <a href="#" className="mt-4 inline-block text-sm font-extrabold uppercase tracking-wide text-destructive hover:text-card-foreground">
+      <Link href="/methodology" className="mt-4 inline-block text-sm font-extrabold uppercase tracking-wide text-destructive hover:text-card-foreground">
         Learn our methodology →
-      </a>
+      </Link>
     </div>
   )
 }

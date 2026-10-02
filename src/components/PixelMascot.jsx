@@ -4,7 +4,7 @@ import mascotHands from '../assets/Adobe Express - file.png'
 export function MascotWorried({ className }) {
   return (
     <img
-      src={mascotWorried}
+      src={mascotWorried.src}
       alt="ABRI mascot, worried and sweating"
       className={`pixel-crisp w-100 select-none ${className || ''}`}
       draggable={false}
@@ -15,7 +15,7 @@ export function MascotWorried({ className }) {
 export function MascotHandsPeek({ className }) {
   return (
     <img
-      src={mascotHands}
+      src={mascotHands.src}
       alt="ABRI mascot peeking over the edge"
       className={`pixel-crisp w-full select-none ${className || ''}`}
       draggable={false}
@@ -31,7 +31,7 @@ export function MascotPeek({ className }) {
       className={`pixel-crisp w-full ${className || ''}`}
       style={{
         aspectRatio: '1 / 0.37',
-        backgroundImage: `url(${mascotWorried})`,
+        backgroundImage: `url(${mascotWorried.src})`,
         backgroundSize: 'cover',
         backgroundPosition: '25% 48%',
       }}

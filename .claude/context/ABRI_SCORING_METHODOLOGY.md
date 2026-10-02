@@ -144,8 +144,14 @@ the intended effect: heavy correction activity should cost more than a flat
 Signals should heavily favor recent information:
 
 ```text
-signal_weight = base_impact × freshness_multiplier × relevance
+signal_weight = base_impact × freshness_multiplier × relevance × tier_weight × confidence
 ```
+
+`tier_weight` comes from the source's tier
+(`ABRI_NEWS_RETRIEVAL_TECHNICAL_BLUEPRINT.md` §6 — Tier 1 official sources
+outweigh Tier 3 general coverage); `confidence` is Sol's own per-signal
+confidence score (`...BLUEPRINT.md` §14). Both are needed for §5's
+conflict-handling to work — see that section.
 
 Base decay curve (as specified):
 
@@ -217,6 +223,42 @@ FactorScore_today = clamp(
 
 First-run / no-history case (bootstrapping day 1): open (§8).
 
+### Conflicting same-day signals — resolved
+
+Two distinct problems were bundled under this question; they resolve
+differently.
+
+**Different events, same factor, opposing direction** (the original
+example — one article says funding is booming, another says a major VC
+pulled back, same day, same factor). This needs no special handling: the
+`Σ` in the formula above already nets opposing signals. The only real gap
+was that `signal_weight` (§4) didn't account for source credibility, so a
+low-tier hot-take could cancel a high-tier announcement on equal footing.
+Folding `tier_weight × confidence` into `signal_weight` (§4) fixes this —
+a Tier 1 company announcement now dominates a Tier 3 opinion piece making
+an opposing claim, proportionally to the tier gap, not just netted 1:1.
+
+**Same event, factually conflicting reports** (two outlets report
+different numbers for the *same* funding round). This is a data-quality
+problem, not a scoring problem, and is resolved upstream at event
+clustering (`ABRI_NEWS_RETRIEVAL_TECHNICAL_BLUEPRINT.md` §9 stage 3), not
+in this formula: when merging article extractions into one event, the
+highest-tier source's figures are kept as the event's authoritative
+values; other figures are retained on the event record for audit but not
+separately counted as competing signals.
+
+**Explainability addition:** when a factor's gross positive + gross
+negative signal magnitude for the day is large but nets to something
+small, that's meaningfully different from "nothing happened that day" —
+losing that distinction would undercut the "why did ABRI move" principle
+(§29 of the blueprint doc). Sol should flag this in its existing
+`uncertainties` output field (`...BLUEPRINT.md` §14) whenever a factor's
+net-to-gross ratio drops below a threshold, e.g. "Funding was pulled in
+both directions today — a $2B round offset by reports of two funds
+pausing new AI deals." ⚠️ The exact dispersion threshold that triggers
+this flag is the one open tuning constant remaining here — pick empirically
+once real signal volume exists.
+
 ---
 
 ## 6. Status bands
@@ -287,7 +329,10 @@ production code is built around them:
   exists.
 - **Missing/sparse news days** — does a factor score hold flat, or decay
   toward a neutral midpoint (50) when there's nothing fresh to report?
-- **Conflicting same-day signals** — e.g. one article says funding is
-  booming, another says a major VC pulled back, same day, same factor. Net
-  them, or weight by source credibility?
 - **Status band thresholds** — §6 is a proposal only.
+
+Resolved since the first draft:
+- ~~Conflicting same-day signals~~ — see §5's "Conflicting same-day
+  signals" subsection. One tuning constant remains open from that
+  resolution: the dispersion threshold that triggers Sol's
+  net-vs-gross `uncertainties` flag.

@@ -941,13 +941,15 @@ Still genuinely open:
 - Fallback model if Luna/Sol are unavailable or rate-limited
 
 ### ABRI
-- Factor definitions
-- Mathematical equation
-- Factor weights
-- Freshness decay
-- Event persistence
-- Score thresholds
-- Contradictory evidence handling
+
+Decided — see `ABRI_SCORING_METHODOLOGY.md`: factor definitions and
+weights (§2), hybrid mathematical model (§1/§3), freshness decay curve
+(§4), ~~contradictory evidence handling~~ (§4/§5 — tier/confidence-weighted
+netting for opposing signals, event-clustering rule for factually
+conflicting reports on the same event). Still open (that doc's §8):
+correction-penalty weight, per-factor normalization rubrics, decay curve
+interpolation, event-persistence classification validation, status
+thresholds.
 
 ### Infrastructure
 - Hosting
@@ -976,3 +978,6 @@ External sources
 ```
 
 The result should be an auditable historical dataset, not merely an AI-generated number.
+
+
+

@@ -845,12 +845,13 @@ Decided in principle — see [`ABRI_SCORING_METHODOLOGY.md`](./ABRI_SCORING_METH
 
 - ~~Mathematical equation~~ — hybrid model, weighted-factor core (§1, §3)
 - ~~Factor weights~~ — 5 factors, weights assigned (§2)
+- ~~Treatment of conflicting signals~~ — tier/confidence-weighted netting
+  plus an event-clustering rule for factually conflicting reports (§4, §5)
 
 Still open (see that document's §8 for the full list):
 
 - Score thresholds (status bands) — proposed, not confirmed
 - Per-factor normalization rubrics — not specified
-- Treatment of conflicting signals
 - Historical baseline mechanics (day-1 bootstrap, missing/sparse data days)
 - Correction-penalty weight (two options proposed, unpicked)
 - Decay curve interpolation and event-persistence classification

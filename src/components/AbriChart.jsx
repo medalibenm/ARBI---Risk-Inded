@@ -1,5 +1,6 @@
+'use client'
+
 import { useMemo, useState } from 'react'
-import { chartData, xAxisLabels } from '../data/chartData'
 
 const WIDTH = 720
 const HEIGHT = 220
@@ -7,27 +8,38 @@ const PAD_LEFT = 4
 const PAD_RIGHT = 4
 const Y_TICKS = [0, 25, 50, 75, 100]
 
-function xFor(i) {
+function xFor(i, count) {
   const usable = WIDTH - PAD_LEFT - PAD_RIGHT
-  return PAD_LEFT + (i / (chartData.length - 1)) * usable
+  return count > 1 ? PAD_LEFT + (i / (count - 1)) * usable : WIDTH / 2
+}
+
+// '2026-10-02' → 'Oct 2'
+function label(date) {
+  return new Date(date + 'T00:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })
 }
 
 function yFor(value) {
   return HEIGHT - (value / 100) * HEIGHT
 }
 
-export default function AbriChart() {
+export default function AbriChart({ data }) {
   const [hover, setHover] = useState(null)
 
   const points = useMemo(
-    () => chartData.map((d, i) => ({ ...d, x: xFor(i), y: yFor(d.value) })),
-    []
+    () => data.map((d, i) => ({ value: d.value, date: label(d.date), x: xFor(i, data.length), y: yFor(d.value) })),
+    [data]
   )
 
   const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ')
   const areaPath = `${linePath} L ${points[points.length - 1].x} ${HEIGHT} L ${points[0].x} ${HEIGHT} Z`
 
   const last = points[points.length - 1]
+
+  // up to 7 evenly spaced date labels
+  const labelCount = Math.min(7, points.length)
+  const xAxisLabels = Array.from({ length: labelCount }, (_, i) =>
+    points[labelCount > 1 ? Math.round((i * (points.length - 1)) / (labelCount - 1)) : 0].date
+  )
 
   function handleMove(e) {
     const rect = e.currentTarget.getBoundingClientRect()
@@ -118,9 +130,9 @@ export default function AbriChart() {
         </div>
       </div>
 
-      <div className="mt-2 flex justify-between pl-8 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-        {xAxisLabels.map((label) => (
-          <span key={label}>{label}</span>
+      <div className={`mt-2 flex pl-8 ${labelCount > 1 ? 'justify-between' : 'justify-center'} text-xs font-semibold uppercase tracking-wide text-muted-foreground`}>
+        {xAxisLabels.map((text) => (
+          <span key={text}>{text}</span>
         ))}
       </div>
     </div>
